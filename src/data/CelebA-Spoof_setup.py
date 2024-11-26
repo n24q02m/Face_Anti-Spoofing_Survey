@@ -1,0 +1,66 @@
+import os
+import zipfile
+import json
+import gdown
+from kaggle.api.kaggle_api_extended import KaggleApi
+
+def download_files():
+    url_list_file = './CelebA-Spoof_url-list.txt'
+    destination = './data/CelebA-Spoof_dataset'
+    if not os.path.exists(destination):
+        os.makedirs(destination)
+
+    print('Downloading files individually using gdown...')
+    try:
+        with open(url_list_file, 'r') as f:
+            urls = [line.strip() for line in f.readlines()]
+        for idx, url in enumerate(urls):
+            output = os.path.join(destination, f'CelebA_Spoof.zip.{idx+1:03d}')
+            if not os.path.exists(output):
+                print(f'Downloading file {idx+1}/{len(urls)}...')
+                gdown.download(url=url, output=output, quiet=False, fuzzy=True)
+        # Verify downloaded files
+        zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
+        if len(zip_files) != 74:
+            print(f'Warning: Found {len(zip_files)} files instead of expected 74')
+        else:
+            print('Successfully downloaded all 74 files')
+    except Exception as e:
+        print(f"Error downloading files: {str(e)}")
+        raise
+
+def extract_files():
+    destination = './data/CelebA-Spoof_dataset'
+    base_dir = destination
+    zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
+    for zip_file in zip_files:
+        zip_path = os.path.join(destination, zip_file)
+        print(f'Extracting {zip_file}...')
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(base_dir)
+
+def upload_to_kaggle():
+    dataset_dir = './data/CelebA-Spoof_dataset'
+    metadata = {
+        'title': 'CelebA-Spoof - Face Anti-Spoofing Dataset',
+        'id': 'n24q02m/celeba-spoof-face-anti-spoofing-dataset',
+        'licenses': [{'name': 'CC0-1.0'}]
+    }
+    metadata_path = os.path.join(dataset_dir, 'dataset-metadata.json')
+    with open(metadata_path, 'w') as f:
+        json.dump(metadata, f, indent=4)
+        
+    api = KaggleApi()
+    api.authenticate()
+    print('Creating dataset on Kaggle...')
+    api.dataset_create_new(
+        folder=dataset_dir,
+        public=True,
+        dir_mode='zip',
+        quiet=False
+    )
+
+if __name__ == '__main__':
+    download_files()
+    extract_files()
+    upload_to_kaggle()
