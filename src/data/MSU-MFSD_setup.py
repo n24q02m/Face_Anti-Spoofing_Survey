@@ -3,6 +3,7 @@ import zipfile
 import json
 import gdown
 from kaggle.api.kaggle_api_extended import KaggleApi
+import shutil
 
 def download_files():
     destination = './data/MSU-MFSD_dataset'
@@ -29,8 +30,9 @@ def download_files():
         
         # Verify downloaded files
         files = os.listdir(destination)
-        if len(files) == 0:
-            print("Warning: No files were downloaded")
+        expected_file_count = 17  # 16 RAR files + 1 txt file
+        if len(files) != expected_file_count:
+            print(f"Warning: Found {len(files)} files instead of expected {expected_file_count}")
             return False
         else:
             print(f'Successfully downloaded {len(files)} files')
@@ -44,13 +46,35 @@ def download_files():
 def extract_files():
     destination = './data/MSU-MFSD_dataset'
     base_dir = destination
-    zip_files = [f for f in os.listdir(destination) if f.endswith('.zip')]
     
-    for zip_file in zip_files:
-        zip_path = os.path.join(destination, zip_file)
-        print(f'Extracting {zip_file}...')
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    # Find all split files ordered by extension
+    split_files = sorted([f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')])
+    
+    if not split_files:
+        print("No split files found")
+        return
+        
+    # Combine split files
+    print("Combining split files...")
+    output_path = os.path.join(destination, 'CelebA_Spoof.zip')
+    with open(output_path, 'wb') as output:
+        for split_file in split_files:
+            print(f'Processing {split_file}...')
+            file_path = os.path.join(destination, split_file)
+            with open(file_path, 'rb') as part:
+                shutil.copyfileobj(part, output)
+    
+    # Extract combined file
+    print(f'Extracting combined file...')
+    try:
+        with zipfile.ZipFile(output_path, 'r') as zip_ref:
             zip_ref.extractall(base_dir)
+        print("Extraction completed successfully")
+        
+        # Optionally remove the combined file to save space
+        # os.remove(output_path)
+    except zipfile.BadZipFile:
+        print("Error: Combined file is not a valid ZIP file")
 
 def upload_to_kaggle():
     dataset_dir = './data/MSU-MFSD_dataset'
