@@ -65,7 +65,7 @@ def download_files():
 
 def extract_files():
     destination = './data/UTKPAD_dataset'
-    tar_files = [f for f in os.listdir(destination) if f.endswith('.tar.gz')]
+    tar_files = sorted([f for f in os.listdir(destination) if f.endswith('.tar.gz')])
     
     for tar_file in tar_files:
         tar_path = os.path.join(destination, tar_file)
@@ -73,6 +73,9 @@ def extract_files():
         try:
             with tarfile.open(tar_path, 'r:gz') as tar:
                 tar.extractall(path=destination)
+            # Remove tar.gz file after extraction
+            os.remove(tar_path)
+            print(f'Removed {tar_file}')
         except Exception as e:
             print(f"Error extracting {tar_file}: {str(e)}")
             return False

@@ -53,10 +53,14 @@ def extract_files():
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(destination)
         print('Extraction completed successfully')
+        
+        # Remove zip file after extraction
+        os.remove(zip_file)
+        print(f'Removed {os.path.basename(zip_file)}')
+        return True
     except Exception as e:
         print(f"Error during extraction: {str(e)}")
         return False
-    return True
 
 def upload_to_kaggle():
     dataset_dir = './data/SynthASpoof_dataset'

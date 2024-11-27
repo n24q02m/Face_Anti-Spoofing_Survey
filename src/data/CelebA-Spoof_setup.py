@@ -47,14 +47,13 @@ def download_files():
 
 def extract_files():
     destination = './data/CelebA-Spoof_dataset'
-    base_dir = destination
     
     # Find all split files ordered by extension
     split_files = sorted([f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')])
     
     if not split_files:
         print("No split files found")
-        return
+        return False
         
     # Combine split files
     print("Combining split files...")
@@ -65,18 +64,24 @@ def extract_files():
             file_path = os.path.join(destination, split_file)
             with open(file_path, 'rb') as part:
                 shutil.copyfileobj(part, output)
+            # Remove split file after combining
+            os.remove(file_path)
+            print(f'Removed {split_file}')
     
     # Extract combined file
     print(f'Extracting combined file...')
     try:
         with zipfile.ZipFile(output_path, 'r') as zip_ref:
-            zip_ref.extractall(base_dir)
+            zip_ref.extractall(destination)
         print("Extraction completed successfully")
         
-        # Optionally remove the combined file to save space
-        # os.remove(output_path)
+        # Remove the combined file
+        os.remove(output_path)
+        print("Removed combined zip file")
+        return True
     except zipfile.BadZipFile:
         print("Error: Combined file is not a valid ZIP file")
+        return False
 
 def upload_to_kaggle():
     dataset_dir = './data/CelebA-Spoof_dataset'
