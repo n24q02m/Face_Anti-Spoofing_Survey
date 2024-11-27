@@ -7,6 +7,8 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 def download_files():
     url_list_file = './data/CelebA-Spoof_url-list.txt'
     destination = './data/CelebA-Spoof_dataset'
+    gdrive_folder = "https://drive.google.com/drive/folders/1OW_1bawO79pRqdVEVmBzp8HSxdSwln_Z"
+    
     if not os.path.exists(destination):
         os.makedirs(destination)
 
@@ -18,16 +20,29 @@ def download_files():
             output = os.path.join(destination, f'CelebA_Spoof.zip.{idx+1:03d}')
             if not os.path.exists(output):
                 print(f'Downloading file {idx+1}/{len(urls)}...')
-                gdown.download(url=url, output=output, quiet=False, fuzzy=True, resume=True)
+                try:
+                    gdown.download(url=url, output=output, quiet=False, fuzzy=True, resume=True)
+                except Exception as download_error:
+                    print("\nDownload failed due to Google Drive limitations.")
+                    print("\nPlease follow these steps to download manually:")
+                    print(f"1. Visit the Google Drive folder: {gdrive_folder}")
+                    print("2. Download all CelebA_Spoof.zip.* files")
+                    print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
+                    print("\nAfter manual download, run this script again to continue with extraction.")
+                    return False
+
         # Verify downloaded files
         zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
         if len(zip_files) != 74:
             print(f'Warning: Found {len(zip_files)} files instead of expected 74')
         else:
             print('Successfully downloaded all 74 files')
+            return True
+            
     except Exception as e:
-        print(f"Error downloading files: {str(e)}")
-        raise
+        print(f"Error during download process: {str(e)}")
+        print(f"\nAlternatively, you can download the files manually from: {gdrive_folder}")
+        return False
 
 def extract_files():
     destination = './data/CelebA-Spoof_dataset'
@@ -61,6 +76,8 @@ def upload_to_kaggle():
     )
 
 if __name__ == '__main__':
-    download_files()
-    extract_files()
-    upload_to_kaggle()
+    if download_files():
+        extract_files()
+        upload_to_kaggle()
+    else:
+        print("\nDownload incomplete. Please complete the manual download before proceeding.")
