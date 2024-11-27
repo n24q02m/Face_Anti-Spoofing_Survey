@@ -5,7 +5,7 @@ import gdown
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 def download_files():
-    url_list_file = './CelebA-Spoof_url-list.txt'
+    url_list_file = './data/CelebA-Spoof_url-list.txt'
     destination = './data/CelebA-Spoof_dataset'
     if not os.path.exists(destination):
         os.makedirs(destination)
@@ -18,7 +18,7 @@ def download_files():
             output = os.path.join(destination, f'CelebA_Spoof.zip.{idx+1:03d}')
             if not os.path.exists(output):
                 print(f'Downloading file {idx+1}/{len(urls)}...')
-                gdown.download(url=url, output=output, quiet=False, fuzzy=True)
+                gdown.download(url=url, output=output, quiet=False, fuzzy=True, resume=True)
         # Verify downloaded files
         zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
         if len(zip_files) != 74:
