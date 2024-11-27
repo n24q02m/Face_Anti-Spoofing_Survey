@@ -96,6 +96,7 @@ def upload_to_kaggle():
     print('Creating dataset on Kaggle...')
     api.dataset_create_new(
         folder=dataset_dir,
+        public=True,
         dir_mode='zip',
         quiet=False
     )
