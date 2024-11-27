@@ -21,7 +21,7 @@ def download_files():
             if not os.path.exists(output):
                 print(f'Downloading file {idx+1}/{len(urls)}...')
                 try:
-                    gdown.download(url=url, output=output, quiet=False, fuzzy=True, resume=True)
+                    gdown.download(url=url, output=output, fuzzy=True, resume=True)
                 except Exception as download_error:
                     print("\nDownload failed due to Google Drive limitations.")
                     print("\nPlease follow these steps to download manually:")
@@ -70,7 +70,6 @@ def upload_to_kaggle():
     print('Creating dataset on Kaggle...')
     api.dataset_create_new(
         folder=dataset_dir,
-        public=True,
         dir_mode='zip',
         quiet=False
     )
