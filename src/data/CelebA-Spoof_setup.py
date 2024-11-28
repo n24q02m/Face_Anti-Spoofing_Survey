@@ -12,38 +12,39 @@ def download_files():
     
     if not os.path.exists(destination):
         os.makedirs(destination)
+        print('Downloading files individually using gdown...')
+        try:
+            with open(url_list_file, 'r') as f:
+                urls = [line.strip() for line in f.readlines()]
+            for idx, url in enumerate(urls):
+                output = os.path.join(destination, f'CelebA_Spoof.zip.{idx+1:03d}') 
+                if not os.path.exists(output):
+                    print(f'Downloading file {idx+1}/{len(urls)}...')
+                    try:
+                        gdown.download(url=url, output=output, fuzzy=True, resume=True)
+                    except Exception as download_error:
+                        print("\nDownload failed due to Google Drive limitations.")
+                        print("\nPlease follow these steps to download manually:")
+                        print(f"1. Visit the Google Drive folder: {gdrive_folder}")
+                        print("2. Download all CelebA_Spoof.zip.* files") 
+                        print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
+                        print("\nAfter manual download, run this script again to continue with extraction.")
+                        return False
 
-    print('Downloading files individually using gdown...')
-    try:
-        with open(url_list_file, 'r') as f:
-            urls = [line.strip() for line in f.readlines()]
-        for idx, url in enumerate(urls):
-            output = os.path.join(destination, f'CelebA_Spoof.zip.{idx+1:03d}')
-            if not os.path.exists(output):
-                print(f'Downloading file {idx+1}/{len(urls)}...')
-                try:
-                    gdown.download(url=url, output=output, fuzzy=True, resume=True)
-                except Exception as download_error:
-                    print("\nDownload failed due to Google Drive limitations.")
-                    print("\nPlease follow these steps to download manually:")
-                    print(f"1. Visit the Google Drive folder: {gdrive_folder}")
-                    print("2. Download all CelebA_Spoof.zip.* files")
-                    print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
-                    print("\nAfter manual download, run this script again to continue with extraction.")
-                    return False
-
-        # Verify downloaded files
-        zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
-        if len(zip_files) != 74:
-            print(f'Warning: Found {len(zip_files)} files instead of expected 74')
-        else:
-            print('Successfully downloaded all 74 files')
-            return True
-            
-    except Exception as e:
-        print(f"Error during download process: {str(e)}")
-        print(f"\nAlternatively, you can download the files manually from: {gdrive_folder}")
-        return False
+            zip_files = [f for f in os.listdir(destination) if f.startswith('CelebA_Spoof.zip.')]
+            if len(zip_files) != 74:
+                print(f'Warning: Found {len(zip_files)} files instead of expected 74')
+            else:
+                print('Successfully downloaded all 74 files')
+                return True
+                
+        except Exception as e:
+            print(f"Error during download process: {str(e)}")
+            print(f"\nAlternatively, you can download the files manually from: {gdrive_folder}")
+            return False
+    else:
+        print(f"Folder {destination} already exists, skipping download...")
+        return True
 
 def extract_files():
     destination = './data/CelebA-Spoof_dataset'

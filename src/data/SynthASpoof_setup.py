@@ -11,38 +11,39 @@ def download_files():
     
     if not os.path.exists(destination):
         os.makedirs(destination)
-
-    print('Downloading file using gdown...')
-    try:
-        output = os.path.join(destination, zip_file)
-        if not os.path.exists(output):
-            success = gdown.download(
-                url=gdrive_url,
-                output=output,
-                fuzzy=True,
-                resume=True
-            )
-            if not success:
-                print("\nDownload failed due to Google Drive limitations.")
-                print("\nPlease follow these steps to download manually:")
-                print(f"1. Visit the Google Drive link: {gdrive_url}")
-                print("2. Download the zip file")
-                print(f"3. Place the downloaded file in: {os.path.abspath(destination)}")
-                print("\nAfter manual download, run this script again to continue with extraction.")
+        print('Downloading file using gdown...')
+        try:
+            output = os.path.join(destination, zip_file)
+            if not os.path.exists(output):
+                success = gdown.download(
+                    url=gdrive_url,
+                    output=output,
+                    fuzzy=True,
+                    resume=True
+                )
+                if not success:
+                    print("\nDownload failed due to Google Drive limitations.")
+                    print("\nPlease follow these steps to download manually:")
+                    print(f"1. Visit the Google Drive link: {gdrive_url}")
+                    print("2. Download the zip file")
+                    print(f"3. Place the downloaded file in: {os.path.abspath(destination)}")
+                    print("\nAfter manual download, run this script again to continue with extraction.")
+                    return False
+            
+            if os.path.exists(output) and os.path.getsize(output) > 0:
+                print('Successfully downloaded file')
+                return True
+            else:
+                print("Warning: File download incomplete or corrupted")
                 return False
-        
-        # Verify downloaded file
-        if os.path.exists(output) and os.path.getsize(output) > 0:
-            print('Successfully downloaded file')
-            return True
-        else:
-            print("Warning: File download incomplete or corrupted")
-            return False
 
-    except Exception as e:
-        print(f"Error during download process: {str(e)}")
-        print(f"\nAlternatively, you can download the file manually from: {gdrive_url}")
-        return False
+        except Exception as e:
+            print(f"Error during download process: {str(e)}")
+            print(f"\nAlternatively, you can download the file manually from: {gdrive_url}")
+            return False
+    else:
+        print(f"Folder {destination} already exists, skipping download...")
+        return True
 
 def extract_files():
     destination = './data/SynthASpoof_dataset'

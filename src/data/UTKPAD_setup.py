@@ -31,37 +31,38 @@ def download_files():
     
     if not os.path.exists(destination):
         os.makedirs(destination)
+        print('Downloading files from Zenodo...')
+        try:
+            for idx, url in enumerate(urls, 1):
+                output = os.path.join(destination, f'UTKPAD_iphone12_part{idx}.tar.gz')
+                if not os.path.exists(output):
+                    print(f'Downloading file {idx}/3...')
+                    try:
+                        download_file(url, output)
+                    except Exception as download_error:
+                        print("\nDownload failed.")
+                        print("\nPlease follow these steps to download manually:")
+                        print("1. Visit Zenodo: https://zenodo.org/records/11234659")
+                        print("2. Download all UTKPAD_iphone12_part*.tar.gz files")
+                        print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
+                        print("\nAfter manual download, run this script again to continue with extraction.")
+                        return False
 
-    print('Downloading files from Zenodo...')
-    try:
-        for idx, url in enumerate(urls, 1):
-            output = os.path.join(destination, f'UTKPAD_iphone12_part{idx}.tar.gz')
-            if not os.path.exists(output):
-                print(f'Downloading file {idx}/3...')
-                try:
-                    download_file(url, output)
-                except Exception as download_error:
-                    print("\nDownload failed.")
-                    print("\nPlease follow these steps to download manually:")
-                    print("1. Visit Zenodo: https://zenodo.org/records/11234659")
-                    print("2. Download all UTKPAD_iphone12_part*.tar.gz files")
-                    print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
-                    print("\nAfter manual download, run this script again to continue with extraction.")
-                    return False
-
-        # Verify downloaded files
-        tar_files = [f for f in os.listdir(destination) if f.endswith('.tar.gz')]
-        if len(tar_files) != 3:
-            print(f'Warning: Found {len(tar_files)} files instead of expected 3')
+            tar_files = [f for f in os.listdir(destination) if f.endswith('.tar.gz')]
+            if len(tar_files) != 3:
+                print(f'Warning: Found {len(tar_files)} files instead of expected 3')
+                return False
+            else:
+                print('Successfully downloaded all 3 files')
+                return True
+                
+        except Exception as e:
+            print(f"Error during download process: {str(e)}")
+            print("\nPlease try downloading the files manually from Zenodo")
             return False
-        else:
-            print('Successfully downloaded all 3 files')
-            return True
-            
-    except Exception as e:
-        print(f"Error during download process: {str(e)}")
-        print("\nPlease try downloading the files manually from Zenodo")
-        return False
+    else:
+        print(f"Folder {destination} already exists, skipping download...")
+        return True
 
 def extract_files():
     destination = './data/UTKPAD_dataset'

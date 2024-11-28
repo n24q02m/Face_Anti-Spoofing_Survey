@@ -11,37 +11,38 @@ def download_files():
     
     if not os.path.exists(destination):
         os.makedirs(destination)
+        print('Downloading folder using gdown...')
+        try:
+            output = gdown.download_folder(
+                url=gdrive_folder,
+                output=destination,
+                resume=True
+            )
+            if output is None:
+                print("\nDownload failed due to Google Drive limitations.")
+                print("\nPlease follow these steps to download manually:")
+                print(f"1. Visit the Google Drive folder: {gdrive_folder}")
+                print("2. Download all files")
+                print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
+                print("\nAfter manual download, run this script again to continue with extraction.")
+                return False
+            
+            files = os.listdir(destination)
+            expected_file_count = 17  # 16 RAR files + 1 txt file
+            if len(files) != expected_file_count:
+                print(f"Warning: Found {len(files)} files instead of expected {expected_file_count}")
+                return False
+            else:
+                print(f'Successfully downloaded {len(files)} files')
+                return True
 
-    print('Downloading folder using gdown...')
-    try:
-        output = gdown.download_folder(
-            url=gdrive_folder,
-            output=destination,
-            resume=True
-        )
-        if output is None:
-            print("\nDownload failed due to Google Drive limitations.")
-            print("\nPlease follow these steps to download manually:")
-            print(f"1. Visit the Google Drive folder: {gdrive_folder}")
-            print("2. Download all files")
-            print(f"3. Place the downloaded files in: {os.path.abspath(destination)}")
-            print("\nAfter manual download, run this script again to continue with extraction.")
+        except Exception as e:
+            print(f"Error during download process: {str(e)}")
+            print(f"\nAlternatively, you can download the files manually from: {gdrive_folder}")
             return False
-        
-        # Verify downloaded files
-        files = os.listdir(destination)
-        expected_file_count = 17  # 16 RAR files + 1 txt file
-        if len(files) != expected_file_count:
-            print(f"Warning: Found {len(files)} files instead of expected {expected_file_count}")
-            return False
-        else:
-            print(f'Successfully downloaded {len(files)} files')
-            return True
-
-    except Exception as e:
-        print(f"Error during download process: {str(e)}")
-        print(f"\nAlternatively, you can download the files manually from: {gdrive_folder}")
-        return False
+    else:
+        print(f"Folder {destination} already exists, skipping download...")
+        return True
 
 def extract_files():
     destination = './data/MSU-MFSD_dataset'
