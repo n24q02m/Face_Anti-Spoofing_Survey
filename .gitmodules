@@ -1,0 +1,3 @@
+[submodule "MD-FAS"]
+	path = MD-FAS
+	url = https://github.com/n24q02m/MD-FAS.git
