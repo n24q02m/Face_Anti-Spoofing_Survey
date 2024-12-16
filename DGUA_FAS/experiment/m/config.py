@@ -27,7 +27,7 @@ class DefaultConfigs(object):
     src3_data = 'msu'
     src3_train_num_frames = 1
     # target data information
-    tgt_data = 'replay'
+    tgt_data = "cati_fas_test"
     tgt_test_num_frames = 3
     # paths information
     checkpoint_path = './test_checkpoint/' + model + '/DGFANet/'

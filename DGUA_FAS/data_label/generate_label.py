@@ -3,16 +3,16 @@ import json
 import glob
 
 # change your data path
-# data_dir = '../../../datasets/data/'
-data_dir = '/disk2/face-anti-dataset/'
+data_dir = "../../data/CATI-FAS_dataset/"
+
 
 def msu_test_process():
     test_list = []
     # data_label for msu
-    for line in open(f'{data_dir}msu_256/test_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/test_sub_list.txt", "r"):
         test_list.append(line[0:2])
     train_list = []
-    for line in open(f'{data_dir}msu_256/train_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/train_sub_list.txt", "r"):
         train_list.append(line[0:2])
     print(test_list)
     print(train_list)
@@ -21,47 +21,47 @@ def msu_test_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './msu_test/'
+    label_save_dir = "./msu_test/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'msu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "msu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if(flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
             # label = 0
-            if path_list[i].find('printed') != -1:
+            if path_list[i].find("printed") != -1:
                 label = 0
             else:
                 label = 2
-        
+
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
         # video_num = path_list[i].split('/')[-2].split('_')[0]
-        video_num = path_list[i].split('/')[-2].split('_')[1][-2:]
-        if (video_num in test_list):
+        video_num = path_list[i].split("/")[-2].split("_")[1][-2:]
+        if video_num in test_list:
             train_final_json.append(dict)
-        
+
             all_final_json.append(dict)
-            if(label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-    print('\nMSU: ', len(path_list))
-    print('MSU(train): ', len(train_final_json))
-    print('MSU(test): ', len(test_final_json))
-    print('MSU(all): ', len(all_final_json))
-    print('MSU(real): ', len(real_final_json))
-    print('MSU(fake): ', len(fake_final_json))
+    print("\nMSU: ", len(path_list))
+    print("MSU(train): ", len(train_final_json))
+    print("MSU(test): ", len(test_final_json))
+    print("MSU(all): ", len(all_final_json))
+    print("MSU(real): ", len(real_final_json))
+    print("MSU(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -72,14 +72,15 @@ def msu_test_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def msu_train_process():
     test_list = []
     # data_label for msu
-    for line in open(f'{data_dir}msu_256/test_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/test_sub_list.txt", "r"):
         test_list.append(line[0:2])
     train_list = []
-    for line in open(f'{data_dir}msu_256/train_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/train_sub_list.txt", "r"):
         train_list.append(line[0:2])
     print(test_list)
     print(train_list)
@@ -88,46 +89,46 @@ def msu_train_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './msu_train/'
+    label_save_dir = "./msu_train/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'msu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "msu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if(flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
-            if path_list[i].find('printed') != -1:
+            if path_list[i].find("printed") != -1:
                 label = 0
             else:
                 label = 2
-        
+
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
         # video_num = path_list[i].split('/')[-2].split('_')[0]
-        video_num = path_list[i].split('/')[-2].split('_')[1][-2:]
-        if (video_num in train_list):
+        video_num = path_list[i].split("/")[-2].split("_")[1][-2:]
+        if video_num in train_list:
             train_final_json.append(dict)
-        
+
             all_final_json.append(dict)
-            if(label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-    print('\nMSU: ', len(path_list))
-    print('MSU(train): ', len(train_final_json))
-    print('MSU(test): ', len(test_final_json))
-    print('MSU(all): ', len(all_final_json))
-    print('MSU(real): ', len(real_final_json))
-    print('MSU(fake): ', len(fake_final_json))
+    print("\nMSU: ", len(path_list))
+    print("MSU(train): ", len(train_final_json))
+    print("MSU(test): ", len(test_final_json))
+    print("MSU(all): ", len(all_final_json))
+    print("MSU(real): ", len(real_final_json))
+    print("MSU(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -139,13 +140,14 @@ def msu_train_process():
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
 
+
 def msu_process():
     test_list = []
     # data_label for msu
-    for line in open(f'{data_dir}msu_256/test_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/test_sub_list.txt", "r"):
         test_list.append(line[0:2])
     train_list = []
-    for line in open(f'{data_dir}msu_256/train_sub_list.txt', 'r'):
+    for line in open(f"{data_dir}msu_256/train_sub_list.txt", "r"):
         train_list.append(line[0:2])
     print(test_list)
     print(train_list)
@@ -154,48 +156,48 @@ def msu_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './msu/'
+    label_save_dir = "./msu/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'msu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "msu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if(flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
             # label = 0
-            if path_list[i].find('printed') != -1:
+            if path_list[i].find("printed") != -1:
                 label = 0
             else:
                 label = 2
-        
+
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
         # video_num = path_list[i].split('/')[-2].split('_')[0]
-        video_num = path_list[i].split('/')[-2].split('_')[1][-2:]
-        if (video_num in train_list):
+        video_num = path_list[i].split("/")[-2].split("_")[1][-2:]
+        if video_num in train_list:
             train_final_json.append(dict)
         else:
             test_final_json.append(dict)
         all_final_json.append(dict)
-        if(label == 1):
+        if label == 1:
             real_final_json.append(dict)
         else:
             fake_final_json.append(dict)
-    print('\nMSU: ', len(path_list))
-    print('MSU(train): ', len(train_final_json))
-    print('MSU(test): ', len(test_final_json))
-    print('MSU(all): ', len(all_final_json))
-    print('MSU(real): ', len(real_final_json))
-    print('MSU(fake): ', len(fake_final_json))
+    print("\nMSU: ", len(path_list))
+    print("MSU(train): ", len(train_final_json))
+    print("MSU(test): ", len(test_final_json))
+    print("MSU(all): ", len(all_final_json))
+    print("MSU(real): ", len(real_final_json))
+    print("MSU(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -214,47 +216,47 @@ def casia_test_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './casia_test/'
+    label_save_dir = "./casia_test/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'casia_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "casia_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].split('/')[-2]
-        if (flag == '1' or flag == '2' or flag == 'HR_1'):
+        flag = path_list[i].split("/")[-2]
+        if flag == "1" or flag == "2" or flag == "HR_1":
             label = 1
         else:
             # label = 0
 
-            if flag in {'3', '4', '5', '6', 'HR_2', 'HR_3'}:
+            if flag in {"3", "4", "5", "6", "HR_2", "HR_3"}:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        flag = path_list[i].find('/train_release/')
-        if (flag == -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        flag = path_list[i].find("/train_release/")
+        if flag == -1:
             train_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
             all_final_json.append(dict)
-        
-    print('\nCasia: ', len(path_list))
-    print('Casia(train): ', len(train_final_json))
-    print('Casia(test): ', len(test_final_json))
-    print('Casia(all): ', len(all_final_json))
-    print('Casia(real): ', len(real_final_json))
-    print('Casia(fake): ', len(fake_final_json))
+
+    print("\nCasia: ", len(path_list))
+    print("Casia(train): ", len(train_final_json))
+    print("Casia(test): ", len(test_final_json))
+    print("Casia(all): ", len(all_final_json))
+    print("Casia(real): ", len(real_final_json))
+    print("Casia(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -265,6 +267,7 @@ def casia_test_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def casia_train_process():
     train_final_json = []
@@ -272,46 +275,46 @@ def casia_train_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './casia_train/'
+    label_save_dir = "./casia_train/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'casia_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "casia_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].split('/')[-2]
-        if (flag == '1' or flag == '2' or flag == 'HR_1'):
+        flag = path_list[i].split("/")[-2]
+        if flag == "1" or flag == "2" or flag == "HR_1":
             label = 1
         else:
             # label = 0
 
-            if flag in {'3', '4', '5', '6', 'HR_2', 'HR_3'}:
+            if flag in {"3", "4", "5", "6", "HR_2", "HR_3"}:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        flag = path_list[i].find('/train_release/')
-        if (flag != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        flag = path_list[i].find("/train_release/")
+        if flag != -1:
             train_final_json.append(dict)
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-    print('\nCasia: ', len(path_list))
-    print('Casia(train): ', len(train_final_json))
-    print('Casia(test): ', len(test_final_json))
-    print('Casia(all): ', len(all_final_json))
-    print('Casia(real): ', len(real_final_json))
-    print('Casia(fake): ', len(fake_final_json))
+    print("\nCasia: ", len(path_list))
+    print("Casia(train): ", len(train_final_json))
+    print("Casia(test): ", len(test_final_json))
+    print("Casia(all): ", len(all_final_json))
+    print("Casia(real): ", len(real_final_json))
+    print("Casia(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -322,6 +325,7 @@ def casia_train_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def casia_process():
     train_final_json = []
@@ -329,48 +333,48 @@ def casia_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './casia/'
+    label_save_dir = "./casia/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'casia_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "casia_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].split('/')[-2]
-        if (flag == '1' or flag == '2' or flag == 'HR_1'):
+        flag = path_list[i].split("/")[-2]
+        if flag == "1" or flag == "2" or flag == "HR_1":
             label = 1
         else:
             # label = 0
 
-            if flag in {'3', '4', '5', '6', 'HR_2', 'HR_3'}:
+            if flag in {"3", "4", "5", "6", "HR_2", "HR_3"}:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        flag = path_list[i].find('/train_release/')
-        if (flag != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        flag = path_list[i].find("/train_release/")
+        if flag != -1:
             train_final_json.append(dict)
         else:
             test_final_json.append(dict)
         all_final_json.append(dict)
-        if (label == 1):
+        if label == 1:
             real_final_json.append(dict)
         else:
             fake_final_json.append(dict)
-    print('\nCasia: ', len(path_list))
-    print('Casia(train): ', len(train_final_json))
-    print('Casia(test): ', len(test_final_json))
-    print('Casia(all): ', len(all_final_json))
-    print('Casia(real): ', len(real_final_json))
-    print('Casia(fake): ', len(fake_final_json))
+    print("\nCasia: ", len(path_list))
+    print("Casia(train): ", len(train_final_json))
+    print("Casia(test): ", len(test_final_json))
+    print("Casia(all): ", len(all_final_json))
+    print("Casia(real): ", len(real_final_json))
+    print("Casia(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(test_final_json, f_test, indent=4)
@@ -381,6 +385,7 @@ def casia_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def replay_test_process():
     train_final_json = []
@@ -389,52 +394,52 @@ def replay_test_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './replay_test/'
+    label_save_dir = "./replay_test/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'replay_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "replay_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if (flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
             # label = 0
-            
-            if path_list[i].find('print') != -1:
+
+            if path_list[i].find("print") != -1:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/replayattack-train/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/replayattack-train/") != -1:
             pass
-        elif(path_list[i].find('/replayattack-devel/') != -1):
+        elif path_list[i].find("/replayattack-devel/") != -1:
             valid_final_json.append(dict)
         else:
             all_final_json.append(dict)
             train_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-            
-    print('\nReplay: ', len(path_list))
-    print('Replay(train): ', len(train_final_json))
-    print('Replay(valid): ', len(valid_final_json))
-    print('Replay(test): ', len(test_final_json))
-    print('Replay(all): ', len(all_final_json))
-    print('Replay(real): ', len(real_final_json))
-    print('Replay(fake): ', len(fake_final_json))
+
+    print("\nReplay: ", len(path_list))
+    print("Replay(train): ", len(train_final_json))
+    print("Replay(valid): ", len(valid_final_json))
+    print("Replay(test): ", len(test_final_json))
+    print("Replay(all): ", len(all_final_json))
+    print("Replay(real): ", len(real_final_json))
+    print("Replay(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -447,6 +452,8 @@ def replay_test_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
+
 def replay_train_process():
     train_final_json = []
     valid_final_json = []
@@ -454,48 +461,48 @@ def replay_train_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './replay_train/'
+    label_save_dir = "./replay_train/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'replay_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "replay_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if (flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
             # label = 0
-            
-            if path_list[i].find('print') != -1:
+
+            if path_list[i].find("print") != -1:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/replayattack-train/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/replayattack-train/") != -1:
             train_final_json.append(dict)
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-        
-    print('\nReplay: ', len(path_list))
-    print('Replay(train): ', len(train_final_json))
-    print('Replay(valid): ', len(valid_final_json))
-    print('Replay(test): ', len(test_final_json))
-    print('Replay(all): ', len(all_final_json))
-    print('Replay(real): ', len(real_final_json))
-    print('Replay(fake): ', len(fake_final_json))
+
+    print("\nReplay: ", len(path_list))
+    print("Replay(train): ", len(train_final_json))
+    print("Replay(valid): ", len(valid_final_json))
+    print("Replay(test): ", len(test_final_json))
+    print("Replay(all): ", len(all_final_json))
+    print("Replay(real): ", len(real_final_json))
+    print("Replay(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -508,6 +515,7 @@ def replay_train_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def replay_process():
     train_final_json = []
@@ -516,54 +524,54 @@ def replay_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './replay/'
+    label_save_dir = "./replay/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'replay_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "replay_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = path_list[i].find('/real/')
-        if (flag != -1):
+        flag = path_list[i].find("/real/")
+        if flag != -1:
             label = 1
         else:
             # label = 0
-            
-            if path_list[i].find('print') != -1:
+
+            if path_list[i].find("print") != -1:
                 label = 0
             else:
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/replayattack-train/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/replayattack-train/") != -1:
             train_final_json.append(dict)
-        elif(path_list[i].find('/replayattack-devel/') != -1):
+        elif path_list[i].find("/replayattack-devel/") != -1:
             valid_final_json.append(dict)
         else:
             test_final_json.append(dict)
-        if(path_list[i].find('/replayattack-devel/') != -1):
+        if path_list[i].find("/replayattack-devel/") != -1:
             continue
         else:
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-    print('\nReplay: ', len(path_list))
-    print('Replay(train): ', len(train_final_json))
-    print('Replay(valid): ', len(valid_final_json))
-    print('Replay(test): ', len(test_final_json))
-    print('Replay(all): ', len(all_final_json))
-    print('Replay(real): ', len(real_final_json))
-    print('Replay(fake): ', len(fake_final_json))
+    print("\nReplay: ", len(path_list))
+    print("Replay(train): ", len(train_final_json))
+    print("Replay(valid): ", len(valid_final_json))
+    print("Replay(test): ", len(test_final_json))
+    print("Replay(all): ", len(all_final_json))
+    print("Replay(real): ", len(real_final_json))
+    print("Replay(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -576,6 +584,7 @@ def replay_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def oulu_train_process():
     train_final_json = []
@@ -584,24 +593,24 @@ def oulu_train_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './oulu_train/'
+    label_save_dir = "./oulu_train/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'oulu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "oulu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = int(path_list[i].split('/')[-2].split('_')[-1])
-        if (flag == 1):
+        flag = int(path_list[i].split("/")[-2].split("_")[-1])
+        if flag == 1:
             label = 1
         else:
-            #label = 0
+            # label = 0
 
             if flag == 2 or flag == 3:
                 label = 0
@@ -609,24 +618,23 @@ def oulu_train_process():
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/Train_files/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/Train_files/") != -1:
             train_final_json.append(dict)
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-        
-            
-    print('\nOulu: ', len(path_list))
-    print('Oulu(train): ', len(train_final_json))
-    print('Oulu(valid): ', len(valid_final_json))
-    print('Oulu(test): ', len(test_final_json))
-    print('Oulu(all): ', len(all_final_json))
-    print('Oulu(real): ', len(real_final_json))
-    print('Oulu(fake): ', len(fake_final_json))
+
+    print("\nOulu: ", len(path_list))
+    print("Oulu(train): ", len(train_final_json))
+    print("Oulu(valid): ", len(valid_final_json))
+    print("Oulu(test): ", len(test_final_json))
+    print("Oulu(all): ", len(all_final_json))
+    print("Oulu(real): ", len(real_final_json))
+    print("Oulu(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -639,6 +647,7 @@ def oulu_train_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
 
 def oulu_test_process():
     train_final_json = []
@@ -647,24 +656,24 @@ def oulu_test_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './oulu_test/'
+    label_save_dir = "./oulu_test/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'oulu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "oulu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = int(path_list[i].split('/')[-2].split('_')[-1])
-        if (flag == 1):
+        flag = int(path_list[i].split("/")[-2].split("_")[-1])
+        if flag == 1:
             label = 1
         else:
-            #label = 0
+            # label = 0
 
             if flag == 2 or flag == 3:
                 label = 0
@@ -672,28 +681,27 @@ def oulu_test_process():
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/Train_files/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/Train_files/") != -1:
             pass
-        elif(path_list[i].find('/Dev_files/') != -1):
+        elif path_list[i].find("/Dev_files/") != -1:
             valid_final_json.append(dict)
         else:
             train_final_json.append(dict)
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-        
-            
-    print('\nOulu: ', len(path_list))
-    print('Oulu(train): ', len(train_final_json))
-    print('Oulu(valid): ', len(valid_final_json))
-    print('Oulu(test): ', len(test_final_json))
-    print('Oulu(all): ', len(all_final_json))
-    print('Oulu(real): ', len(real_final_json))
-    print('Oulu(fake): ', len(fake_final_json))
+
+    print("\nOulu: ", len(path_list))
+    print("Oulu(train): ", len(train_final_json))
+    print("Oulu(valid): ", len(valid_final_json))
+    print("Oulu(test): ", len(test_final_json))
+    print("Oulu(all): ", len(all_final_json))
+    print("Oulu(real): ", len(real_final_json))
+    print("Oulu(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -706,6 +714,8 @@ def oulu_test_process():
     f_real.close()
     json.dump(fake_final_json, f_fake, indent=4)
     f_fake.close()
+
+
 def oulu_process():
     train_final_json = []
     valid_final_json = []
@@ -713,24 +723,24 @@ def oulu_process():
     all_final_json = []
     real_final_json = []
     fake_final_json = []
-    label_save_dir = './oulu/'
+    label_save_dir = "./oulu/"
     if not os.path.exists(label_save_dir):
         os.makedirs(label_save_dir)
-    f_train = open(label_save_dir + 'train_label.json', 'w')
-    f_valid = open(label_save_dir + 'valid_label.json', 'w')
-    f_test = open(label_save_dir + 'test_label.json', 'w')
-    f_all = open(label_save_dir + 'all_label.json', 'w')
-    f_real = open(label_save_dir + 'real_label.json', 'w')
-    f_fake = open(label_save_dir + 'fake_label.json', 'w')
-    dataset_path = data_dir + 'oulu_256/'
-    path_list = glob.glob(dataset_path + '**/*.png', recursive=True)
+    f_train = open(label_save_dir + "train_label.json", "w")
+    f_valid = open(label_save_dir + "valid_label.json", "w")
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir + "oulu_256/"
+    path_list = glob.glob(dataset_path + "**/*.png", recursive=True)
     path_list.sort()
     for i in range(len(path_list)):
-        flag = int(path_list[i].split('/')[-2].split('_')[-1])
-        if (flag == 1):
+        flag = int(path_list[i].split("/")[-2].split("_")[-1])
+        if flag == 1:
             label = 1
         else:
-            #label = 0
+            # label = 0
 
             if flag == 2 or flag == 3:
                 label = 0
@@ -738,29 +748,29 @@ def oulu_process():
                 label = 2
 
         dict = {}
-        dict['photo_path'] = path_list[i]
-        dict['photo_label'] = label
-        if (path_list[i].find('/Train_files/') != -1):
+        dict["photo_path"] = path_list[i]
+        dict["photo_label"] = label
+        if path_list[i].find("/Train_files/") != -1:
             train_final_json.append(dict)
-        elif(path_list[i].find('/Dev_files/') != -1):
+        elif path_list[i].find("/Dev_files/") != -1:
             valid_final_json.append(dict)
         else:
             test_final_json.append(dict)
-        if(path_list[i].find('/Dev_files/') != -1):
+        if path_list[i].find("/Dev_files/") != -1:
             continue
         else:
             all_final_json.append(dict)
-            if (label == 1):
+            if label == 1:
                 real_final_json.append(dict)
             else:
                 fake_final_json.append(dict)
-    print('\nOulu: ', len(path_list))
-    print('Oulu(train): ', len(train_final_json))
-    print('Oulu(valid): ', len(valid_final_json))
-    print('Oulu(test): ', len(test_final_json))
-    print('Oulu(all): ', len(all_final_json))
-    print('Oulu(real): ', len(real_final_json))
-    print('Oulu(fake): ', len(fake_final_json))
+    print("\nOulu: ", len(path_list))
+    print("Oulu(train): ", len(train_final_json))
+    print("Oulu(valid): ", len(valid_final_json))
+    print("Oulu(test): ", len(test_final_json))
+    print("Oulu(all): ", len(all_final_json))
+    print("Oulu(real): ", len(real_final_json))
+    print("Oulu(fake): ", len(fake_final_json))
     json.dump(train_final_json, f_train, indent=4)
     f_train.close()
     json.dump(valid_final_json, f_valid, indent=4)
@@ -775,9 +785,52 @@ def oulu_process():
     f_fake.close()
 
 
-if __name__=="__main__":
-    msu_process()
-    oulu_process()
-    casia_process()
-    replay_process()
-   
+def cati_fas_test_process():
+    test_final_json = []
+    all_final_json = []
+    real_final_json = []
+    fake_final_json = []
+    label_save_dir = "./cati_fas_test/"
+    if not os.path.exists(label_save_dir):
+        os.makedirs(label_save_dir)
+    f_test = open(label_save_dir + "test_label.json", "w")
+    f_all = open(label_save_dir + "all_label.json", "w")
+    f_real = open(label_save_dir + "real_label.json", "w")
+    f_fake = open(label_save_dir + "fake_label.json", "w")
+    dataset_path = data_dir
+    path_list = glob.glob(os.path.join(dataset_path, "**/*.*"), recursive=True)
+    path_list.sort()
+    for i in range(len(path_list)):
+        if any(ext in path_list[i].lower() for ext in [".jpg", ".png", ".heic"]):
+            if "live" in path_list[i].lower():
+                label = 1
+            else:
+                label = 0
+
+            dict = {}
+            dict["photo_path"] = path_list[i].replace("\\", "/")
+            dict["photo_label"] = label
+            if "live" in path_list[i].lower():
+                real_final_json.append(dict)
+            else:
+                fake_final_json.append(dict)
+            all_final_json.append(dict)
+            test_final_json.append(dict)
+
+    print("\nCATI-FAS: ", len(path_list))
+    print("CATI-FAS(test): ", len(test_final_json))
+    print("CATI-FAS(all): ", len(all_final_json))
+    print("CATI-FAS(real): ", len(real_final_json))
+    print("CATI-FAS(fake): ", len(fake_final_json))
+    json.dump(test_final_json, f_test, indent=4)
+    f_test.close()
+    json.dump(all_final_json, f_all, indent=4)
+    f_all.close()
+    json.dump(real_final_json, f_real, indent=4)
+    f_real.close()
+    json.dump(fake_final_json, f_fake, indent=4)
+    f_fake.close()
+
+
+if __name__ == "__main__":
+    cati_fas_test_process()
