@@ -1,0 +1,7 @@
+gdown
+kaggle
+pandas
+matplotlib
+seaborn
+tqdm
+opencv-python

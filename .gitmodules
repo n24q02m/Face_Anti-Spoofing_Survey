@@ -1,3 +1,6 @@
-[submodule "MD-FAS"]
-	path = MD-FAS
-	url = https://github.com/n24q02m/MD-FAS.git
+[submodule "MD_FAS"]
+	path = MD_FAS
+	url = https://github.com/n24q02m/MD_FAS.git
+[submodule "DGUA_FAS"]
+	path = DGUA_FAS
+	url = https://github.com/n24q02m/DGUA_FAS.git
