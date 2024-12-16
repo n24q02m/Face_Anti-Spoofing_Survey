@@ -1,6 +1,0 @@
-[submodule "DGUA_FAS"]
-	path = DGUA_FAS
-	url = https://github.com/AI-Application-and-Integration-Lab/DGUA_FAS.git
-[submodule "Multi-domain-learning-FAS"]
-	path = Multi-domain-learning-FAS
-	url = https://github.com/CHELSEA234/Multi-domain-learning-FAS.git
