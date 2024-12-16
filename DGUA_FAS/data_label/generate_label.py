@@ -3,7 +3,7 @@ import json
 import glob
 
 # change your data path
-data_dir = "../../data/CATI-FAS_dataset/"
+data_dir = "/kaggle/input/cati-fas-face-anti-spoofing-dataset"
 
 
 def msu_test_process():
