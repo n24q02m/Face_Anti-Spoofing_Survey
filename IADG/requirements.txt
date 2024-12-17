@@ -67,7 +67,7 @@ ply
 protobuf
 psutil
 py
-pycairo
+#pycairo
 pycodestyle
 pydocstyle
 pydot
