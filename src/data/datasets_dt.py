@@ -12,6 +12,18 @@ from pillow_heif import register_heif_opener
 # Register HEIF/HEIC opener
 register_heif_opener()
 
+# Initialize MTCNN model for face detection 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+mtcnn = MTCNN(
+    image_size=224,
+    margin=0,
+    min_face_size=20,
+    thresholds=[0.6, 0.7, 0.7],
+    factor=0.709,
+    device=device,
+    keep_all=False  # Only detect most prominent face
+)
+
 # Dataset paths
 DATASETS = {
     'CATI-FAS': './data/CATI_FAS_dataset', 
@@ -98,16 +110,4 @@ def main():
     print(f"\nTotal images processed: {total_processed}")
 
 if __name__ == "__main__":
-    # Initialize MTCNN model for face detection 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    mtcnn = MTCNN(
-        image_size=224,
-        margin=0,
-        min_face_size=20,
-        thresholds=[0.6, 0.7, 0.7],
-        factor=0.709,
-        device=device,
-        keep_all=False  # Only detect most prominent face
-    )
-    
     main()

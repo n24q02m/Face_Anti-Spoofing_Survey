@@ -33,7 +33,7 @@ def convert_heic_to_jpg(dataset_path):
                 
             # Save as JPG with same name
             jpg_path = heic_path.with_suffix('.jpg')
-            img.save(jpg_path, 'JPG', quality=95)
+            img.save(jpg_path, 'JPEG', quality=95)
             
             # Remove original HEIC file after successful conversion
             heic_path.unlink()
@@ -41,7 +41,7 @@ def convert_heic_to_jpg(dataset_path):
         except Exception as e:
             print(f"Error converting {heic_path}: {str(e)}")
 
-if __name__ == '__main__':
+def main():
     datasets = [
         './data/CATI_FAS_dataset'
     ]
@@ -52,3 +52,6 @@ if __name__ == '__main__':
             convert_heic_to_jpg(dataset)
         else:
             print(f"\nSkipping {dataset} - directory not found")
+
+if __name__ == '__main__':
+    main()

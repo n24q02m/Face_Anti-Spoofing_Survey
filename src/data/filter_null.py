@@ -93,10 +93,10 @@ def rename_files(dataset_path):
                 except Exception as e:
                     print(f"Error renaming {file.name}: {str(e)}")
 
-if __name__ == '__main__':
+def main():
     datasets = [
         './data/CATI_FAS_dataset',
-        './data/LCC_FASD_dataset',
+        './data/LCC_FASD_dataset', 
         './data/NUAAA_dataset',
         './data/CelebA_Spoof_dataset'
     ]
@@ -108,3 +108,6 @@ if __name__ == '__main__':
                 rename_files(dataset)
         else:
             print(f"\nSkipping {dataset} - directory not found")
+
+if __name__ == '__main__':
+    main()

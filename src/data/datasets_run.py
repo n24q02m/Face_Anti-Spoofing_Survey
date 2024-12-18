@@ -1,6 +1,9 @@
 import os
-import importlib
 import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+import importlib
 
 def run_module(module_name):
     """Run a Python module by importing and executing it"""
@@ -9,8 +12,15 @@ def run_module(module_name):
         print(f"\nExecuting {module_name}...")
         if hasattr(module, 'main'):
             module.main()
+        else:
+            print(f"Error: Module {module_name} has no main() function")
+            sys.exit(1)
+    except ImportError as e:
+        print(f"Error importing {module_name}: {str(e)}")
+        sys.exit(1)
     except Exception as e:
         print(f"Error executing {module_name}: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
         sys.exit(1)
 
 def main():
