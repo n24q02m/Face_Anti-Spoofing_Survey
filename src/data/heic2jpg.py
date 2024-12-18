@@ -3,9 +3,31 @@ from pathlib import Path
 from PIL import Image
 from pillow_heif import register_heif_opener
 from tqdm import tqdm
+import multiprocessing as mp
+from functools import partial
 
 # Register HEIF/HEIC opener
 register_heif_opener()
+
+def convert_single_file(heic_path):
+    """Convert single HEIC file to JPG"""
+    try:
+        # Open HEIC file
+        img = Image.open(str(heic_path))
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+            
+        # Save as JPG with same name
+        jpg_path = heic_path.with_suffix('.jpg')
+        img.save(jpg_path, 'JPEG', quality=95)
+        
+        # Remove original HEIC file after successful conversion
+        heic_path.unlink()
+        return True
+        
+    except Exception as e:
+        print(f"Error converting {heic_path}: {str(e)}")
+        return False
 
 def convert_heic_to_jpg(dataset_path):
     """Convert all HEIC images in dataset to JPG format"""
@@ -23,23 +45,20 @@ def convert_heic_to_jpg(dataset_path):
         
     print(f"Found {len(heic_files)} HEIC files")
     
-    # Convert each file
-    for heic_path in tqdm(heic_files, desc="Converting"):
-        try:
-            # Open HEIC file
-            img = Image.open(str(heic_path))
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-                
-            # Save as JPG with same name
-            jpg_path = heic_path.with_suffix('.jpg')
-            img.save(jpg_path, 'JPEG', quality=95)
-            
-            # Remove original HEIC file after successful conversion
-            heic_path.unlink()
-            
-        except Exception as e:
-            print(f"Error converting {heic_path}: {str(e)}")
+    # Use all available CPU cores
+    num_processes = mp.cpu_count()
+    print(f"Using {num_processes} processes")
+    
+    # Process files in parallel
+    with mp.Pool(num_processes) as pool:
+        results = list(tqdm(
+            pool.imap(convert_single_file, heic_files),
+            total=len(heic_files),
+            desc="Converting"
+        ))
+    
+    success = sum(results)
+    print(f"Successfully converted {success}/{len(heic_files)} files")
 
 def main():
     datasets = [

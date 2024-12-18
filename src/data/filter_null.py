@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from tqdm import tqdm
+import multiprocessing as mp
+from functools import partial
 
 def get_image_files(folder_path):
     """Get all image files in folder"""
@@ -9,10 +11,22 @@ def get_image_files(folder_path):
         image_files.extend(list(Path(folder_path).glob(f'*{ext}')))
     return sorted(image_files)
 
+def check_and_remove_file(img_file):
+    """Check and remove single file if no BB file exists"""
+    bb_file = img_file.parent / f"{img_file.stem}_BB.txt"
+    if not bb_file.exists():
+        img_file.unlink()
+        return 1
+    return 0
+
 def remove_undetected_faces(dataset_path):
-    """Remove images without corresponding BB files"""
+    """Remove images without corresponding BB files in parallel"""
     print(f"\nRemoving images without face detection in {os.path.basename(dataset_path)}...")
     removed = 0
+    
+    # Use all available CPU cores
+    num_processes = mp.cpu_count()
+    print(f"Using {num_processes} processes")
     
     for folder in ['live', 'spoof']:
         folder_path = Path(dataset_path) / folder
@@ -24,11 +38,16 @@ def remove_undetected_faces(dataset_path):
             continue
             
         print(f"\nChecking {folder} folder...")
-        for img_file in tqdm(image_files, desc="Checking files"):
-            bb_file = folder_path / f"{img_file.stem}_BB.txt"
-            if not bb_file.exists():
-                img_file.unlink()
-                removed += 1
+        
+        # Process files in parallel
+        with mp.Pool(num_processes) as pool:
+            results = list(tqdm(
+                pool.imap(check_and_remove_file, image_files),
+                total=len(image_files),
+                desc="Checking files"
+            ))
+        
+        removed += sum(results)
                 
     return removed
 
