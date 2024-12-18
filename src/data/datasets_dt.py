@@ -19,41 +19,10 @@ DATASETS = {
     'NUAAA': './data/NUAAA_dataset'
 }
 
-def convert_to_jpg(img_path):
-    """Convert HEIC/JPEG image to JPG format"""
-    try:
-        # Open image with PIL
-        img = Image.open(str(img_path))
-        
-        # Convert to RGB if needed
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-            
-        # Create new jpg filename
-        jpg_path = img_path.parent / f"{img_path.stem}.jpg"
-        
-        # Save as JPG
-        img.save(jpg_path, 'JPEG')
-        
-        # Remove original file if conversion successful
-        if jpg_path.exists():
-            img_path.unlink()
-            
-        return jpg_path
-        
-    except Exception as e:
-        print(f"Error converting {img_path}: {str(e)}")
-        return None
 
 def process_image(img_path, dataset_name):
     """Process single image and generate BB file"""
-    try:
-        # Convert HEIC/JPEG to JPG if needed
-        if img_path.suffix.lower() in ['.heic', '.jpeg']:
-            img_path = convert_to_jpg(img_path)
-            if img_path is None:
-                return False
-                
+    try:        
         # Read image
         img = cv2.imread(str(img_path))
         if img is None:
@@ -99,7 +68,7 @@ def process_dataset(dataset_path, dataset_name):
     # Find all images recursively
     image_files = []
     dataset_path = Path(dataset_path)
-    for ext in ['.jpg', '.jpeg', '.png', '.heic']:
+    for ext in ['.jpg', '.png',]:
         image_files.extend(list(dataset_path.rglob(f"*{ext}")))
     
     print(f"Found {len(image_files)} images")

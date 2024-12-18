@@ -5,3 +5,4 @@ matplotlib
 seaborn
 tqdm
 opencv-python
+pillow_heif
