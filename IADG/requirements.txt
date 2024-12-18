@@ -12,7 +12,7 @@ charset-normalizer
 click
 cryptography
 cycler
-dbus-python
+#dbus-python
 decorator
 distro
 docker-pycreds
@@ -67,7 +67,7 @@ ply
 protobuf
 psutil
 py
-pycairo
+#pycairo
 pycodestyle
 pydocstyle
 pydot
