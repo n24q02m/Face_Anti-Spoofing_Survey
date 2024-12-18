@@ -5,7 +5,7 @@ from tqdm import tqdm
 def get_image_files(folder_path):
     """Get all image files in folder"""
     image_files = []
-    for ext in ['.jpg', '.jpeg', '.png']:
+    for ext in ['.jpg', '.png']:
         image_files.extend(list(Path(folder_path).glob(f'*{ext}')))
     return sorted(image_files)
 
@@ -97,7 +97,8 @@ if __name__ == '__main__':
     datasets = [
         './data/CATI_FAS_dataset',
         './data/LCC_FASD_dataset',
-        './data/NUAAA_dataset'  
+        './data/NUAAA_dataset',
+        './data/CelebA_Spoof_dataset'
     ]
     
     for dataset in datasets:

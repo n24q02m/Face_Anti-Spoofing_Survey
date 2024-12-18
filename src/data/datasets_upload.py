@@ -38,7 +38,7 @@ def verify_face_detection(dataset_path):
             
         # Get all image files
         image_files = []
-        for ext in ['.jpg', '.jpeg', '.png', '.heic']:
+        for ext in ['.jpg', '.png',]:
             image_files.extend(list(folder_path.glob(f'*{ext}')))
             
         # Check for corresponding BB files

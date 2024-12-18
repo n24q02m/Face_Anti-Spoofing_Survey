@@ -33,7 +33,7 @@ def convert_heic_to_jpg(dataset_path):
                 
             # Save as JPG with same name
             jpg_path = heic_path.with_suffix('.jpg')
-            img.save(jpg_path, 'JPEG', quality=95)
+            img.save(jpg_path, 'JPG', quality=95)
             
             # Remove original HEIC file after successful conversion
             heic_path.unlink()
@@ -43,9 +43,7 @@ def convert_heic_to_jpg(dataset_path):
 
 if __name__ == '__main__':
     datasets = [
-        './data/CATI_FAS_dataset',
-        './data/LCC_FASD_dataset', 
-        './data/NUAAA_dataset'
+        './data/CATI_FAS_dataset'
     ]
     
     for dataset in datasets:
