@@ -1,56 +1,86 @@
 import os
 import cv2
-import numpy as np
+import numpy as np 
 from pathlib import Path
 from tqdm import tqdm
 import torch
 import torchvision
 from facenet_pytorch import MTCNN
+from PIL import Image
+from pillow_heif import register_heif_opener
+
+# Register HEIF/HEIC opener
+register_heif_opener()
 
 # Dataset paths
 DATASETS = {
-    'CATI-FAS': './data/CATI_FAS_dataset',
+    'CATI-FAS': './data/CATI_FAS_dataset', 
     'LCC-FASD': './data/LCC_FASD_dataset',
     'NUAAA': './data/NUAAA_dataset'
 }
 
-def process_image(img_path, dataset_name):
-    """Process single image and generate BB file in same directory"""
+def convert_to_jpg(img_path):
+    """Convert HEIC/JPEG image to JPG format"""
     try:
-        # Read image 
+        # Open image with PIL
+        img = Image.open(str(img_path))
+        
+        # Convert to RGB if needed
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+            
+        # Create new jpg filename
+        jpg_path = img_path.parent / f"{img_path.stem}.jpg"
+        
+        # Save as JPG
+        img.save(jpg_path, 'JPEG')
+        
+        # Remove original file if conversion successful
+        if jpg_path.exists():
+            img_path.unlink()
+            
+        return jpg_path
+        
+    except Exception as e:
+        print(f"Error converting {img_path}: {str(e)}")
+        return None
+
+def process_image(img_path, dataset_name):
+    """Process single image and generate BB file"""
+    try:
+        # Convert HEIC/JPEG to JPG if needed
+        if img_path.suffix.lower() in ['.heic', '.jpeg']:
+            img_path = convert_to_jpg(img_path)
+            if img_path is None:
+                return False
+                
+        # Read image
         img = cv2.imread(str(img_path))
         if img is None:
             return False
             
-        # Get image dimensions
+        # Rest of processing remains same
         real_h, real_w = img.shape[:2]
-        
-        # Convert BGR to RGB
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         
-        # Detect faces
         boxes, probs = mtcnn.detect(img_rgb)
         
         if boxes is None or len(boxes) == 0:
             print(f"No face detected in {img_path}")
             return False
             
-        # Get coordinates of most confident detection
         box = boxes[0]
         prob = probs[0]
         
-        # Convert to format: x, y, w, h
         x1, y1, x2, y2 = box
         w = x2 - x1
         h = y2 - y1
         
-        # Scale coordinates to 224x224
         x = int(x1 * 224 / real_w)
         y = int(y1 * 224 / real_h)
         w = int(w * 224 / real_w)
         h = int(h * 224 / real_h)
         
-        # Write BB file in same directory as image
         bb_path = img_path.parent / f"{img_path.stem}_BB.txt"
         with open(bb_path, 'w') as f:
             f.write(f"{x} {y} {w} {h} {prob:.7f}")
@@ -60,6 +90,7 @@ def process_image(img_path, dataset_name):
     except Exception as e:
         print(f"Error processing {img_path}: {str(e)}")
         return False
+
 
 def process_dataset(dataset_path, dataset_name):
     """Process entire dataset"""
